@@ -1,0 +1,32 @@
+name: IKUUU 自动签到
+
+on:
+  schedule:
+    # 每天北京时间 9:00 执行（UTC 1:00）
+    - cron: '0 1 * * *'
+  workflow_dispatch:  # 允许手动触发
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: 检出代码
+      uses: actions/checkout@v4
+      
+    - name: 设置 Python 环境
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        
+    - name: 安装依赖
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 urllib3
+        
+    - name: 执行签到
+      env:
+        IKUUU_EMAIL: ${{ secrets.IKUUU_EMAIL }}
+        IKUUU_PASSWORD: ${{ secrets.IKUUU_PASSWORD }}
+        IKUUU_DOMAIN: ${{ secrets.IKUUU_DOMAIN }}  # 可选，不设置则使用默认域名
+      run: python main.py

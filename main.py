@@ -11,7 +11,13 @@ import urllib3
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # 域名配置
-BASE_DOMAIN = "ikuuu.ch"
+# 支持GitHub环境变量 IKUUU_DOMAIN，可以设置不同的域名
+# 本地测试时可直接修改 LOCAL_DOMAIN，为空时使用环境变量，默认为 ikuuu.ch
+LOCAL_DOMAIN = ""                     # 本地测试时可填入域名，如：ikuuu.ch
+DEFAULT_DOMAIN = "ikuuu.ch"           # 默认域名
+
+# 按优先级获取域名：本地变量 > 环境变量 > 默认值
+BASE_DOMAIN = LOCAL_DOMAIN if LOCAL_DOMAIN else os.getenv('IKUUU_DOMAIN', DEFAULT_DOMAIN)
 BASE_URL = f"https://{BASE_DOMAIN}"
 
 # 本地测试变量，本地测试时可以在这里设置，为空时使用环境变量
@@ -118,12 +124,19 @@ def login_and_get_cookie():
         print_with_time("可选配置方式:", "INFO")
         print("   📝 1. 在代码中设置 LOCAL_EMAIL 和 LOCAL_PASSWORD")
         print("   🔧 2. 设置环境变量 IKUUU_EMAIL 和 IKUUU_PASSWORD")
+        print("")
+        print_with_time("可选域名配置:", "INFO")
+        print("   📝 1. 在代码中设置 LOCAL_DOMAIN")
+        print("   🔧 2. 设置环境变量 IKUUU_DOMAIN")
+        print(f"   ⚙️  当前使用域名: {BASE_DOMAIN}")
         return None
     
     # 判断使用的配置方式
     config_source = "本地变量" if LOCAL_EMAIL and LOCAL_PASSWORD else "环境变量"
+    domain_source = "本地变量" if LOCAL_DOMAIN else ("环境变量" if os.getenv('IKUUU_DOMAIN') else "默认值")
     masked_email = f"{email[:3]}***{email.split('@')[1]}"
     print_with_time(f"使用{config_source}配置，账号: {masked_email}", "INFO")
+    print_with_time(f"使用{domain_source}域名: {BASE_DOMAIN}", "INFO")
     
     try:
         # 获取登录页面

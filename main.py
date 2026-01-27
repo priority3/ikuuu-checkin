@@ -21,8 +21,8 @@ BASE_DOMAIN = LOCAL_DOMAIN if LOCAL_DOMAIN else os.getenv('IKUUU_DOMAIN', DEFAUL
 BASE_URL = f"https://{BASE_DOMAIN}"
 
 # 本地测试变量，本地测试时可以在这里设置，为空时使用环境变量
-LOCAL_EMAIL = "1724747604@qq.com"     # 本地测试时填入邮箱
-LOCAL_PASSWORD = "Lzq030152"  # 本地测试时可以填入密码
+LOCAL_EMAIL = ""     # 本地测试时填入邮箱
+LOCAL_PASSWORD = ""  # 本地测试时可以填入密码
 
 def print_with_time(message, level="INFO"):
     """带时间戳和级别的打印"""
